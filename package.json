@@ -1,0 +1,28 @@
+{
+  "name": "neon-dominion",
+  "version": "1.0.0",
+  "description": "Multiplayer Real-Time Strategy Game",
+  "private": true,
+  "workspaces": [
+    "shared",
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm run dev",
+    "build:shared": "cd shared && npm run typecheck",
+    "build:server": "cd server && npm run build",
+    "build:client": "cd client && npm run build",
+    "typecheck": "npm run build:shared && cd server && npm run typecheck && cd ../client && npm run typecheck"
+  },
+  "keywords": [
+    "game",
+    "multiplayer",
+    "rts",
+    "socket.io",
+    "react"
+  ],
+  "author": "",
+  "license": "ISC"
+}
