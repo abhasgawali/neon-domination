@@ -6,7 +6,6 @@
     "moduleResolution": "node",
     "rootDir": "./src",
     "outDir": "./dist",
-   "rootDir": "..",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
