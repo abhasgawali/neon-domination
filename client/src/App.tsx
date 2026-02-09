@@ -9,7 +9,7 @@ import clsx from 'clsx';
 
 // Audio Context Helper
 const playSound = (type: 'sun' | 'attack' | 'mine' | 'shield' | 'blast') => {
-  const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
   const ctx = new AudioContext();
   const osc = ctx.createOscillator();
   const gain = ctx.createGain();
