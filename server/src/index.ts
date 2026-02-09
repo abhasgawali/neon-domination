@@ -6,15 +6,34 @@ import { ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketDa
 import { GameManager } from './gameManager';
 
 const app = express();
+
+// CORS configuration - allow localhost for dev and production URLs from env
+const getAllowedOrigins = (): string[] => {
+  if (process.env.ALLOWED_ORIGINS) {
+    return process.env.ALLOWED_ORIGINS.split(',').map(origin => origin.trim());
+  }
+  return ["http://localhost:5173", "http://localhost:3000"];
+};
+
+const allowedOrigins = getAllowedOrigins();
+
+// Log allowed origins in production for debugging
+if (process.env.NODE_ENV === 'production') {
+  console.log('Allowed CORS origins:', allowedOrigins);
+}
+
 app.use(cors({
   origin: (origin, callback) => {
-    const allowedOrigins = process.env.ALLOWED_ORIGINS 
-      ? process.env.ALLOWED_ORIGINS.split(',')
-      : ["http://localhost:5173", "http://localhost:3000"];
+    // Allow requests with no origin (like mobile apps, Postman, or curl)
+    if (!origin) {
+      callback(null, true);
+      return;
+    }
     
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.warn(`CORS blocked origin: ${origin}. Allowed origins:`, allowedOrigins);
       callback(new Error('Not allowed by CORS'));
     }
   },
@@ -24,10 +43,7 @@ app.use(cors({
 const httpServer = createServer(app);
 
 // Initialize Socket.io with Shared Types
-// CORS configuration - allow localhost for dev and production URL
-const allowedOrigins = process.env.ALLOWED_ORIGINS 
-  ? process.env.ALLOWED_ORIGINS.split(',')
-  : ["http://localhost:5173", "http://localhost:3000"];
+// CORS configuration for Socket.io - must match Express CORS
 
 const io = new Server<
   ClientToServerEvents,
@@ -38,9 +54,15 @@ const io = new Server<
   cors: {
     origin: (origin, callback) => {
       // Allow requests with no origin (like mobile apps or curl requests)
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (!origin) {
+        callback(null, true);
+        return;
+      }
+      
+      if (allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
+        console.warn(`Socket.io CORS blocked origin: ${origin}. Allowed origins:`, allowedOrigins);
         callback(new Error('Not allowed by CORS'));
       }
     },
