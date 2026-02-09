@@ -10,7 +10,9 @@ const app = express();
 // CORS configuration - allow localhost for dev and production URLs from env
 const getAllowedOrigins = (): string[] => {
   if (process.env.ALLOWED_ORIGINS) {
-    return process.env.ALLOWED_ORIGINS.split(',').map(origin => origin.trim());
+    return process.env.ALLOWED_ORIGINS.split(',')
+      .map(origin => origin.trim())
+      .map(origin => origin.replace(/\/$/, '')); // Remove trailing slashes
   }
   return ["http://localhost:5173", "http://localhost:3000"];
 };
