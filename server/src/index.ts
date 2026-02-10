@@ -7,26 +7,26 @@ import { GameManager } from './gameManager';
 
 const app = express();
 
-// CORS configuration - allow localhost for dev and production URLs from env
+
 const getAllowedOrigins = (): string[] => {
   if (process.env.ALLOWED_ORIGINS) {
     return process.env.ALLOWED_ORIGINS.split(',')
       .map(origin => origin.trim())
-      .map(origin => origin.replace(/\/$/, '')); // Remove trailing slashes
+      .map(origin => origin.replace(/\/$/, '')); 
   }
   return ["http://localhost:5173", "http://localhost:3000"];
 };
 
 const allowedOrigins = getAllowedOrigins();
 
-// Log allowed origins in production for debugging
+
 if (process.env.NODE_ENV === 'production') {
   console.log('Allowed CORS origins:', allowedOrigins);
 }
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps, Postman, or curl)
+   
     if (!origin) {
       callback(null, true);
       return;
@@ -44,8 +44,7 @@ app.use(cors({
 
 const httpServer = createServer(app);
 
-// Initialize Socket.io with Shared Types
-// CORS configuration for Socket.io - must match Express CORS
+
 
 const io = new Server<
   ClientToServerEvents,
@@ -55,7 +54,7 @@ const io = new Server<
 >(httpServer, {
   cors: {
     origin: (origin, callback) => {
-      // Allow requests with no origin (like mobile apps or curl requests)
+
       if (!origin) {
         callback(null, true);
         return;
@@ -73,7 +72,7 @@ const io = new Server<
   }
 });
 
-// Initialize Game Logic
+
 const gameManager = new GameManager(io);
 
 io.on("connection", (socket) => {
