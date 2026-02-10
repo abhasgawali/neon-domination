@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply bg-slate-900 text-white font-sans overflow-hidden select-none;
+    @apply bg-slate-900 text-white font-sans overflow-x-hidden select-none;
     font-family: 'Rajdhani', sans-serif;
   }
 }
@@ -50,7 +50,8 @@
 :root {
   --grid-cols: 12;
   --grid-rows: 8;
-  --tile-size: min(6.5vw, 10vh);
+  /* Slightly smaller tiles so board fits comfortably between HUD and controls */
+  --tile-size: min(4.5vw, 7vh);
 }
 
 .landscape-lock-overlay {
@@ -80,7 +81,8 @@
   gap: 4px;
   width: min-content;
   max-width: 95vw;
-  max-height: 70vh;
+  /* Reduce max height so grid never collides with HUD/controls */
+  max-height: 55vh;
   margin: auto;
 }
 
@@ -92,7 +94,8 @@
 
 @media (max-width: 768px) {
   :root {
-    --tile-size: min(7vw, 9vh);
+    /* Smaller tiles on mobile so full board remains visible with HUD + controls */
+    --tile-size: min(6vw, 7vh);
   }
 
   .glass-panel {

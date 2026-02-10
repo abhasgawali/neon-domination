@@ -311,7 +311,7 @@ export default function App() {
   }
 
   return (
-    <div className="h-screen w-screen flex flex-col relative overflow-hidden bg-slate-900">
+    <div className="min-h-screen w-screen flex flex-col relative bg-slate-900">
       <ToastContainer />
 
       {/* MOBILE ORIENTATION LOCK - PORTRAIT ONLY */}
@@ -325,7 +325,8 @@ export default function App() {
         <p className="text-slate-400 text-sm max-w-[200px] leading-tight">Rotate to landscape to establish neural link.</p>
       </div>
 
-      <div className="absolute top-0 left-0 w-full p-2 sm:p-4 flex justify-between z-50 pointer-events-none">
+      {/* HUD TOP - no absolute positioning so it never overlaps the board */}
+      <div className="w-full p-2 sm:p-4 flex justify-between z-20 pointer-events-none">
         <div className="flex flex-col gap-1.5 sm:gap-2">
           <div className="glass-panel px-3 py-2 sm:px-6 sm:py-3 rounded-xl sm:rounded-2xl flex items-center gap-3 sm:gap-6 pointer-events-auto">
             <div className="text-center">
@@ -374,7 +375,8 @@ export default function App() {
         </div>
       </div>
 
-      <div className="flex-1 flex items-center justify-center z-10 p-4 pt-20 pb-24 sm:pt-32 sm:pb-32">
+      {/* GAME GRID - centered and allowed to shrink/grow with viewport */}
+      <div className="flex-1 flex items-center justify-center z-10 px-2 sm:px-4 pt-2 pb-4 sm:pt-4 sm:pb-6">
         <div
           ref={(el) => { boardRef.current = el; }}
           className="game-grid p-1.5 sm:p-3 bg-slate-800/10 rounded-2xl sm:rounded-3xl border border-slate-700/30 shadow-2xl backdrop-blur-sm"
@@ -418,6 +420,7 @@ export default function App() {
         </div>
       </div>
 
+      {/* SUN LAYER - can float over content but does not block layout flow */}
       <div className="absolute inset-0 pointer-events-none z-40 overflow-hidden">
         {suns.map((sun) => (
           <div
@@ -431,7 +434,8 @@ export default function App() {
         ))}
       </div>
 
-      <div className="absolute bottom-2 sm:bottom-4 left-0 w-full flex justify-center gap-2 sm:gap-4 z-50 pointer-events-none px-2 sm:px-4">
+      {/* CONTROLS - stacked at bottom in normal flow so they never cover tiles */}
+      <div className="w-full flex justify-center gap-2 sm:gap-4 z-20 pointer-events-none px-2 sm:px-4 mt-2 mb-3">
         <button
           onClick={() => setActiveMode('conquer')}
           className={clsx(
